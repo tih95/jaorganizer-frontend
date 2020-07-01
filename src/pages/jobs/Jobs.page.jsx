@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { ClipLoader } from 'react-spinners';
-import { Button, Box, FormLabel, Collapse, Stack, Flex, ButtonGroup } from '@chakra-ui/core';
+import { Button, Box, FormLabel, Flex, ButtonGroup } from '@chakra-ui/core';
 import { AiOutlinePlus } from 'react-icons/ai';
 
 import { JobList } from '../../components/job-list/JobList.component';

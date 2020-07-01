@@ -1,6 +1,6 @@
 import React from 'react';
 import { AiOutlineArrowLeft } from 'react-icons/ai';
-import { Box, Heading, Flex, Button } from '@chakra-ui/core';
+import { Box, Heading, Button } from '@chakra-ui/core';
 
 import { AddJobForm } from '../../components/add-job-form/AddJobForm.component';
 

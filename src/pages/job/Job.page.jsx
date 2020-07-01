@@ -3,12 +3,11 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import { ClipLoader } from 'react-spinners';
 import { AiOutlineArrowLeft } from 'react-icons/ai';
-import { Button, Text, Editable, Box } from '@chakra-ui/core';
+import { Button, Text, Box } from '@chakra-ui/core';
 
 const Job = ({ match, history }) => {
   const jobId = match.params.id;
   const [ job, setJob ] = useState({});
-  const [ isEditing, setIsEditing ] = useState(false);
   const [ isLoading, setIsLoading ] = useState(true);
 
   const deleteJob = async () => {
