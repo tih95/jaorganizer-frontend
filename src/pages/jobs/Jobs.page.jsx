@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-import { ClipLoader } from 'react-spinners';
-import { Button, Box, FormLabel, Flex, ButtonGroup } from '@chakra-ui/core';
+import { Button, Box, FormLabel, Flex, ButtonGroup, Skeleton } from '@chakra-ui/core';
 import { AiOutlinePlus } from 'react-icons/ai';
+import { useMediaQuery } from 'react-responsive';
 
 import { JobList } from '../../components/job-list/JobList.component';
 
 const Jobs = () => {
+  const isMobile = useMediaQuery({ query: '(max-width: 600px)'});
   const [ jobList, setJobList ] = useState([]);
   const [ isLoading, setIsLoading ] = useState(true);
   const [ filter, setFilter ] = useState('all');
@@ -32,8 +33,8 @@ const Jobs = () => {
   const filteredJobs = filterJobs(filter);
 
   return (
-    <Box padding="1em 2em">
-      <Flex alignItems="center" justifyContent="space-between" marginBottom="1.5em">
+    <Box padding="1em 2em" maxWidth="1000px" margin="0 auto">
+      <Flex flexDirection={isMobile ? 'column' : 'row'} alignItems="center" justifyContent="space-between" marginBottom="1.5em">
         <Flex alignItems="center">
           <FormLabel>Filter by: </FormLabel>
           <ButtonGroup>
@@ -60,7 +61,7 @@ const Jobs = () => {
 
       
       {isLoading
-        ? <ClipLoader />
+        ? <Skeleton height="50px" />
         : <JobList jobs={filteredJobs} />
       }
       

@@ -7,7 +7,7 @@ import { AddJobForm } from '../../components/add-job-form/AddJobForm.component';
 const AddJob = ({ history }) => {
 
   return (
-    <Box padding="1em 2em">
+    <Box padding="1em 2em" maxWidth="1000px" margin="0 auto">
       <Button 
         onClick={() => history.goBack()} 
         marginBottom="0.8em" 

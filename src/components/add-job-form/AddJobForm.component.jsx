@@ -5,8 +5,6 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import { Button, Stack } from '@chakra-ui/core';
 
-import "react-datepicker/dist/react-datepicker.css";
-
 import { CustomInput } from '../custom-input/CustomInput.component';
 import { CustomSelect } from '../custom-select/CustomSelect.component';
 
@@ -62,6 +60,7 @@ const AddJobForm = ({ history }) => {
     }),
     onSubmit: async values => {
       try {
+        console.log('values', values);
         setIsAdding(true);
         const resp = await axios.post('https://infinite-garden-10545.herokuapp.com/api/jobs', values)
         toast.success(`Successfully added ${resp.data.title}`);
@@ -149,6 +148,7 @@ const AddJobForm = ({ history }) => {
           backgroundColor="teal.400" 
           _hover={{backgroundColor: 'teal.300'}} 
           type="submit"
+          loadingText="Adding..."
         >
           Add Job
         </Button>

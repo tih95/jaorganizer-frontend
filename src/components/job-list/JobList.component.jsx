@@ -1,7 +1,7 @@
 import React from 'react';
 import { Stack, Box } from '@chakra-ui/core';
 
-import { JobListItem } from '../job-item/JobListItem.component';
+import { JobListItem } from '../job-list-item/JobListItem.component';
 
 const colors = {
   'applied': '#4299E1',
