@@ -13,7 +13,7 @@ const Job = ({ match, history }) => {
 
   const deleteJob = async () => {
     try {
-      await axios.delete(`http://localhost:3001/api/jobs/${jobId}`);
+      await axios.delete(`https://infinite-garden-10545.herokuapp.com/api/jobs/${jobId}`);
       toast.success(`Sucessfully deleted ${job.title}`);
       history.goBack();
     }
@@ -26,7 +26,7 @@ const Job = ({ match, history }) => {
     const fetchJob = async () => {
       console.log('fetching job info');
       try {
-        const resp = await axios.get(`http://localhost:3001/api/jobs/${jobId}`);
+        const resp = await axios.get(`https://infinite-garden-10545.herokuapp.com/api/jobs/${jobId}`);
       
         setJob(resp.data);
         setIsLoading(false);

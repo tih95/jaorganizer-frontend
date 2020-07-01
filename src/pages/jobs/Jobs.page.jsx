@@ -14,7 +14,7 @@ const Jobs = () => {
   
   useEffect(() => {
     const fetchJobs = async () => {
-      const resp = await axios.get('http://localhost:3001/api/jobs');
+      const resp = await axios.get('https://infinite-garden-10545.herokuapp.com/api/jobs');
       setJobList(resp.data);
       setIsLoading(false);
     }

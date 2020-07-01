@@ -63,7 +63,7 @@ const AddJobForm = ({ history }) => {
     onSubmit: async values => {
       try {
         setIsAdding(true);
-        const resp = await axios.post('http://localhost:3001/api/jobs', values)
+        const resp = await axios.post('https://infinite-garden-10545.herokuapp.com/api/jobs', values)
         toast.success(`Successfully added ${resp.data.title}`);
         formik.resetForm();
         history.goBack();
