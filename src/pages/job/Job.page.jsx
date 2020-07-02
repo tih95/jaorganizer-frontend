@@ -11,13 +11,13 @@ import { EditJobModal } from '../../components/edit-job-modal/EditJobModal.compo
 
 dayjs.extend(utc);
 
-const colors = {
-  'applied': '#4299E1',
-  'under-review': '#ECC94B',
-  'offered': '#48BB78',
-  'rejected': '#F56565',
-  'interviewing': '#ED8936'
-}
+// const colors = {
+//   'applied': '#4299E1',
+//   'under-review': '#ECC94B',
+//   'offered': '#48BB78',
+//   'rejected': '#F56565',
+//   'interviewing': '#ED8936'
+// }
 
 const statuses = {
   applied: 'Applied',
