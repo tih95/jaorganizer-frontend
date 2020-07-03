@@ -6,8 +6,12 @@ import { Jobs } from './pages/jobs/Jobs.page';
 import { AddJob } from './pages/add-job/AddJob.page';
 import { Job } from './pages/job/Job.page';
 import { NotFound } from './pages/not-found/NotFound.page';
+import { SignUp } from './pages/sign-up/SignUp.page';
+import { Login } from './pages/login/Login.page';
 import { Header } from './components/header/Header.component';
 import { ThemeProvider, CSSReset } from '@chakra-ui/core';
+import { Landing } from './pages/landing/Landing.page';
+
 import CustomTheme from './theme';
 
 import 'react-toastify/dist/ReactToastify.css';
@@ -28,6 +32,9 @@ function App() {
         />
         <Header />
         <Switch>
+          <Route exact path="/" component={Landing} />
+          <Route exact path="/signup" component={SignUp} />
+          <Route exact path="/login" component={Login} />
           <Route exact path="/jobs" component={Jobs} />
           <Route exact path="/jobs/:id" component={Job} />
           <Route exact path="/add-job" component={AddJob} />
