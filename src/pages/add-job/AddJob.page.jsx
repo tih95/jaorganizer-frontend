@@ -4,8 +4,8 @@ import { Box, Heading, Button } from '@chakra-ui/core';
 
 import { AddJobForm } from '../../components/add-job-form/AddJobForm.component';
 
-const AddJob = ({ history }) => {
-
+const AddJob = ({ history, user }) => {
+  console.log(history);
   return (
     <Box padding="1em 2em" maxWidth="1000px" margin="0 auto">
       <Button 
@@ -18,7 +18,7 @@ const AddJob = ({ history }) => {
          Go back to jobs
       </Button>
       <Heading>Add A Job</Heading>
-      <AddJobForm history={history} />
+      <AddJobForm user={user} history={history} />
     </Box>
   )
 }

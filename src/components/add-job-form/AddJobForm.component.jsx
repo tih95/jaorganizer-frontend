@@ -31,7 +31,7 @@ const options = [
   },
 ]
 
-const AddJobForm = ({ history }) => {
+const AddJobForm = ({ history, user }) => {
   
   const [ isAdding, setIsAdding ] = useState(false);
   const formik = useFormik({
@@ -60,11 +60,20 @@ const AddJobForm = ({ history }) => {
     }),
     onSubmit: async values => {
       try {
-        console.log('values', values);
+        const config = {
+          headers: {
+            Authorization: `bearer ${user.token}`
+          }
+        }
+        console.log('got here 1');
         setIsAdding(true);
-        const resp = await axios.post('https://infinite-garden-10545.herokuapp.com/api/jobs', values)
+        console.log('got here 2')
+        const resp = await axios.post('http://localhost:3001/api/jobs', values, config)
+        console.log('got here 3');
         toast.success(`Successfully added ${resp.data.title}`);
+        console.log('got here 4');
         formik.resetForm();
+        console.log('got here 5');
         history.goBack();
         
       }
@@ -73,8 +82,6 @@ const AddJobForm = ({ history }) => {
       }
     }
   });
-
-  console.log(typeof formik.values.dateApplied)
 
   return (
     <form onSubmit={formik.handleSubmit}>

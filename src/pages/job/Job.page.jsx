@@ -11,13 +11,13 @@ import { EditJobModal } from '../../components/edit-job-modal/EditJobModal.compo
 
 dayjs.extend(utc);
 
-// const colors = {
-//   'applied': '#4299E1',
-//   'under-review': '#ECC94B',
-//   'offered': '#48BB78',
-//   'rejected': '#F56565',
-//   'interviewing': '#ED8936'
-// }
+const colors = {
+  'applied': '#4299E1',
+  'under-review': '#ECC94B',
+  'offered': '#48BB78',
+  'rejected': '#F56565',
+  'interviewing': '#ED8936'
+}
 
 const statuses = {
   applied: 'Applied',
@@ -27,7 +27,7 @@ const statuses = {
   rejected: 'Rejected'
 }
 
-const Job = ({ match, history }) => {
+const Job = ({ match, history, user }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const jobId = match.params.id;
   const [ job, setJob ] = useState({});
@@ -36,8 +36,13 @@ const Job = ({ match, history }) => {
 
   useEffect(() => {
     const fetchJob = async () => {
+      const config = {
+        headers: {
+          Authorization: `bearer ${user.token}`
+        }
+      }
       try {
-        const resp = await axios.get(`https://infinite-garden-10545.herokuapp.com/api/jobs/${jobId}`);
+        const resp = await axios.get(`http://localhost:3001/api/jobs/${jobId}`, config);
       
         setJob(resp.data);
         setIsLoading(false);
@@ -49,16 +54,22 @@ const Job = ({ match, history }) => {
     }
 
     fetchJob();
-  }, [jobId])
+  }, [jobId, user])
 
   const deleteJob = async () => {
+    const config = {
+      headers: {
+        Authorization: `bearer ${user.token}`
+      }
+    }
     try {
       setDeleting(true);
-      await axios.delete(`https://infinite-garden-10545.herokuapp.com/api/jobs/${jobId}`);
+      await axios.delete(`http://localhost:3001/api/jobs/${jobId}`, config);
       toast.success(`Sucessfully deleted ${job.title}`);
       history.goBack();
     }
     catch(e) {
+      setDeleting(false);
       toast.error('Failed to delete job');
     }
   }
@@ -77,6 +88,7 @@ const Job = ({ match, history }) => {
           history={history}
           isOpen={isOpen}
           onClose={onClose}
+          user={user}
         />
         
         <Button 
@@ -88,24 +100,25 @@ const Job = ({ match, history }) => {
         >
           Go back to jobs
         </Button>
+        <Heading marginBottom="1em" fontSize="1.6em" as="h1">{job.title}</Heading>
         <Flex 
           flexDirection="column"
         >
-          <Heading marginBottom="1em" fontSize="1.6em" as="h1">{job.title}</Heading>
           <Text>
-            Link to posting: <Link href={job.jobLink} isExternal>{job.jobLink} <Icon name="external-link" /></Link>
+            Link to posting: <Link color="blue.300" href={job.jobLink} isExternal>{job.jobLink} <Icon name="external-link" /></Link>
           </Text>
-          <Text>Location: {job.location}</Text>
-          <Text>Company: {job.company}</Text>
-          <Text>Date Applied: {dayjs.utc(job.dateApplied).format('MMM DD, \'YY')}</Text>
-          <Text>Status: {statuses[job.status]}</Text>
+          <Text>Location: <Text as="strong">{job.location}</Text></Text>
+          <Text>Company: <Text as="strong">{job.company}</Text></Text>
+          <Text>Date Applied: <Text as="strong">{dayjs.utc(job.dateApplied).format('MMM DD, \'YY')}</Text></Text>
+          <Text>Status: <Text as="strong" color={colors[job.status]}>{statuses[job.status]}</Text></Text>
         </Flex>
-        <ButtonGroup marginTop="2em">
+        <ButtonGroup display="flex" width="100%" marginTop="2em">
           <Button 
             backgroundColor="#38B2AC" 
             _hover={{backgroundColor: 'teal.300'}}
             onClick={onOpen}
             leftIcon={AiOutlineEdit}
+            flex="1"
           >
             Edit Job
           </Button>
@@ -117,6 +130,7 @@ const Job = ({ match, history }) => {
             isLoading={deleting}
             loadingText="Deleting"
             leftIcon={AiOutlineDelete}
+            flex="1"
           >
             Delete Job
           </Button>

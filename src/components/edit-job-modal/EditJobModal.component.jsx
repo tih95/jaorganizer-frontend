@@ -43,7 +43,7 @@ const options = [
   },
 ]
 
-const EditJobModal = ({ history, job, isOpen, onClose }) => {
+const EditJobModal = ({ history, job, isOpen, onClose, user }) => {
   
   const [ isAdding, setIsAdding ] = useState(false);
   const formik = useFormik({
@@ -71,10 +71,14 @@ const EditJobModal = ({ history, job, isOpen, onClose }) => {
         .required('Required')
     }),
     onSubmit: async values => {
+      const config = {
+        headers: {
+          Authorization: `bearer ${user.token}`
+        }
+      }
       try {
-        console.log('values', values)
         setIsAdding(true);
-        const resp = await axios.put(`https://infinite-garden-10545.herokuapp.com/api/jobs/${job.id}`, values)
+        const resp = await axios.put(`http://localhost:3001/api/jobs/${job.id}`, values, config)
         toast.success(`Successfully edited ${resp.data.title}`);
         formik.resetForm();
         history.goBack();
