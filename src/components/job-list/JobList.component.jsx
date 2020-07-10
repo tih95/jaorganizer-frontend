@@ -1,5 +1,5 @@
 import React from 'react';
-import { Stack, Box } from '@chakra-ui/core';
+import { Stack, Box, Text } from '@chakra-ui/core';
 
 import { JobListItem } from '../job-list-item/JobListItem.component';
 
@@ -14,12 +14,15 @@ const colors = {
 const JobList = ({ jobs }) => {
   return (
     <Stack spacing={4}>
-      {jobs.map(job => (
-        <Box key={job.id}>
-          <JobListItem color={colors[job.status]} job={job}/>
-        </Box>
-        
-      ))}
+      {
+        jobs.length === 0
+          ? <Text textAlign="center" fontSize="1.4em" fontWeight="600">You have no jobs. Try adding one!</Text>  
+          : jobs.map(job => (
+              <Box key={job.id}>
+                <JobListItem color={colors[job.status]} job={job}/>
+              </Box>
+            ))
+      }
     </Stack>
   )
 }
