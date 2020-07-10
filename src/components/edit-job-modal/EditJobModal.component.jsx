@@ -1,22 +1,28 @@
 import React, { useState } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import axios from 'axios';
 import { toast } from 'react-toastify';
-import { Button, Stack, Modal,
+import { 
+  Button, 
+  Stack, 
+  Modal,
   ModalOverlay,
   ModalContent,
   ModalHeader,
   ModalFooter,
   ModalBody,
-  ModalCloseButton, } from '@chakra-ui/core';
+  ModalCloseButton, 
+  FormLabel, 
+  Textarea,
+  Text, 
+  Input, 
+  InputGroup, 
+  FormControl, 
+  Select} from '@chakra-ui/core';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 
-import "react-datepicker/dist/react-datepicker.css";
-
-import { CustomInput } from '../custom-input/CustomInput.component';
-import { CustomSelect } from '../custom-select/CustomSelect.component';
+import { editJob } from '../../services/jobs';
 
 dayjs.extend(utc);
 
@@ -43,7 +49,7 @@ const options = [
   },
 ]
 
-const EditJobModal = ({ history, job, isOpen, onClose, user }) => {
+const EditJobModal = ({ setJob, job, isOpen, onClose, user }) => {
   
   const [ isAdding, setIsAdding ] = useState(false);
   const formik = useFormik({
@@ -53,7 +59,8 @@ const EditJobModal = ({ history, job, isOpen, onClose, user }) => {
       jobLink: job.jobLink,
       status: job.status,
       company: job.company,
-      location: job.location
+      location: job.location,
+      notes: job.notes
     },
     validationSchema: Yup.object({
       title: Yup.string()
@@ -68,7 +75,8 @@ const EditJobModal = ({ history, job, isOpen, onClose, user }) => {
       company: Yup.string()
         .required('Required'),
       location: Yup.string()
-        .required('Required')
+        .required('Required'),
+      notes: Yup.string()
     }),
     onSubmit: async values => {
       const config = {
@@ -78,11 +86,11 @@ const EditJobModal = ({ history, job, isOpen, onClose, user }) => {
       }
       try {
         setIsAdding(true);
-        const resp = await axios.put(`http://localhost:3001/api/jobs/${job.id}`, values, config)
-        toast.success(`Successfully edited ${resp.data.title}`);
+        const data = await editJob(job.id, values, config);
+        toast.success(`Successfully edited ${data.title}`);
+        setJob(data);
         formik.resetForm();
-        history.goBack();
-        
+        onClose();
       }
       catch(e) {
         toast.error(`Failed to add ${values.title}`);
@@ -98,105 +106,181 @@ const EditJobModal = ({ history, job, isOpen, onClose, user }) => {
       && formik.values.jobLink === job.jobLink
       && formik.values.location === job.location
       && formik.values.status === job.status
+      && formik.values.notes === job.notes
     )
   }
   
   return (
     <Modal size="xl" isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Modal Title</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
+      <ModalOverlay />
+      <ModalContent>
+        <ModalHeader>Modal Title</ModalHeader>
+        <ModalCloseButton />
+        <ModalBody>
             <form onSubmit={formik.handleSubmit}>
               <Stack>
-                <CustomInput
-                  label="Job Title"
-                  type="text" 
-                  id="title"
-                  name="title"
-                  handleChange={formik.handleChange}
-                  handleBlur={formik.handleBlur}
-                  touched={formik.touched.title}
-                  error={formik.errors.title}
-                  value={formik.values.title}
-                />
-                <CustomInput
-                  label="Date Applied"
-                  type="date" 
-                  id="dateApplied"
-                  name="dateApplied"
-                  handleChange={formik.handleChange}
-                  handleBlur={formik.handleBlur}
-                  touched={formik.touched.dateApplied}
-                  error={formik.errors.dateApplied}
-                  value={formik.values.dateApplied}
-                />
-                <CustomInput
-                  label="Link to Posting"
-                  type="text" 
-                  id="jobLink"
-                  name="jobLink"
-                  handleChange={formik.handleChange}
-                  handleBlur={formik.handleBlur}
-                  touched={formik.touched.jobLink}
-                  error={formik.errors.jobLink}
-                  value={formik.values.jobLink}
-                />
-                <CustomSelect 
-                  label="Select Job Application Status"
-                  handleChange={formik.handleChange}
-                  name="status"
-                  options={options}
-                  error={formik.errors.status}
-                  touched={formik.touched.status}
-                  defaultValue={job.status}
-                />
-                <CustomInput
-                  label="Job Location"
-                  type="text" 
-                  id="location"
-                  name="location"
-                  handleChange={formik.handleChange}
-                  handleBlur={formik.handleBlur}
-                  touched={formik.touched.location}
-                  error={formik.errors.location}
-                  value={formik.values.location}
-                />
-                <CustomInput
-                  label="Company"
-                  type="text" 
-                  id="company"
-                  name="company"
-                  handleChange={formik.handleChange}
-                  handleBlur={formik.handleBlur}
-                  touched={formik.touched.company}
-                  error={formik.errors.company}
-                  value={formik.values.company}
+                <FormControl marginBottom="1.5em">
+                  <FormLabel htmlFor="title">Job Title</FormLabel>
+                  <InputGroup>
+                    <Input 
+                      type="text"
+                      name="title"
+                      id="title"
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      value={formik.values.title}
+                      borderColor={
+                        formik.touched.title && formik.errors.title 
+                        ? '#FC8181' 
+                        : '#CBD5E0'
+                      }
+                    />
+                  </InputGroup>
+                  {formik.touched.title && formik.errors.title
+                    ? <Text color="#FC8181">{formik.errors.title}</Text>
+                    : null
+                  }
+                </FormControl>
+
+                <FormControl marginBottom="1.5em">
+                  <FormLabel htmlFor="dateApplied">Date Applied</FormLabel>
+                  <InputGroup>
+                    <Input 
+                      type="date"
+                      name="dateApplied"
+                      id="dateApplied"
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      value={formik.values.dateApplied}
+                      borderColor={
+                        formik.touched.date && formik.errors.dateApplied 
+                        ? '#FC8181' 
+                        : '#CBD5E0'
+                      }
+                    />
+                  </InputGroup>
+                  {formik.touched.dateApplied && formik.errors.dateApplied
+                    ? <Text color="#FC8181">{formik.errors.dateApplied}</Text>
+                    : null
+                  }
+                </FormControl>
+                  
+                <FormControl marginBottom="1.5em">
+                  <FormLabel htmlFor="jobLink">Link to Posting</FormLabel>
+                  <InputGroup>
+                    <Input 
+                      type="text"
+                      name="jobLink"
+                      id="jobLink"
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      value={formik.values.jobLink}
+                      borderColor={
+                        formik.touched.jobLink && formik.errors.jobLink 
+                        ? '#FC8181' 
+                        : '#CBD5E0'
+                      }
+                    />
+                  </InputGroup>
+                  {formik.touched.jobLink && formik.errors.jobLink
+                    ? <Text color="#FC8181">{formik.errors.jobLink}</Text>
+                    : null
+                  }
+                </FormControl>
+
+                <FormControl marginBottom="1.5em">
+                  <FormLabel>Select Application Status</FormLabel>
+                    <Select
+                      placeholder="Select status" 
+                      onChange={formik.handleChange} 
+                      name="status"
+                    >
+                      {options.map((option) => (
+                        <option key={option.status} value={option.status}>{option.text}</option>
+                      ))}
+                    </Select>
+                    {
+                      formik.errors.status && formik.touched.status
+                        ? <Text color="red.300">{formik.errors.status}</Text>
+                        : null
+                    }
+                </FormControl>
+
+                <FormControl marginBottom="1.5em">
+                  <FormLabel htmlFor="location">Job Location</FormLabel>
+                  <InputGroup>
+                    <Input 
+                      type="text"
+                      name="location"
+                      id="location"
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      value={formik.values.location}
+                      borderColor={
+                        formik.touched.location && formik.errors.location 
+                        ? '#FC8181' 
+                        : '#CBD5E0'
+                      }
+                    />
+                  </InputGroup>
+                  {formik.touched.location && formik.errors.location
+                    ? <Text color="#FC8181">{formik.errors.location}</Text>
+                    : null
+                  }
+                </FormControl>
+                <FormControl marginBottom="1.5em">
+                  <FormLabel htmlFor="company">Company</FormLabel>
+                  <InputGroup>
+                    <Input 
+                      type="text"
+                      name="company"
+                      id="company"
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      value={formik.values.company}
+                      borderColor={
+                        formik.touched.company && formik.errors.company 
+                        ? '#FC8181' 
+                        : '#CBD5E0'
+                      }
+                    />
+                  </InputGroup>
+                  {formik.touched.company && formik.errors.company
+                    ? <Text color="#FC8181">{formik.errors.company}</Text>
+                    : null
+                  }
+                </FormControl>
+                <FormLabel htmlFor="notes">Notes</FormLabel>
+                <Textarea 
+                  value={formik.values.notes}
+                  onChange={formik.handleChange}
+                  name="notes"
+                  id="notes"
+                  placeholder="# Use markdown to create notes about job, interview, etc!" 
+                  resize="vertical" 
                 />
               </Stack>
             </form>
-          </ModalBody>
+        </ModalBody>
 
-          <ModalFooter>
-            <Button 
-              isLoading={isAdding} 
-              loadingText="Adding..." 
-              backgroundColor="teal.400" 
-              _hover={{backgroundColor: 'teal.300'}} 
-              variantColor="blue" 
-              mr={3} 
-              onClick={formik.handleSubmit}
-              isDisabled={hasFormedChanged()}
-            >
-              Edit
-            </Button>
-            <Button onClick={onClose}>Cancel</Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
-    
+        <ModalFooter>
+          <Button 
+            isLoading={isAdding} 
+            loadingText="Adding..." 
+            backgroundColor="teal.400" 
+            _hover={{backgroundColor: 'teal.300'}} 
+            variantColor="blue" 
+            mr={3} 
+            onClick={formik.handleSubmit}
+            isDisabled={hasFormedChanged()}
+          >
+            Edit
+          </Button>
+          <Button onClick={onClose}>Cancel</Button>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
   )
 }
 
-export { EditJobModal };
+export default EditJobModal;

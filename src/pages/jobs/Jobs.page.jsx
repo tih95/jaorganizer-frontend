@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { Button, Box, FormLabel, Flex, ButtonGroup, Skeleton,
   Menu,
@@ -9,8 +8,11 @@ import { Button, Box, FormLabel, Flex, ButtonGroup, Skeleton,
   MenuItemOption, } from '@chakra-ui/core';
 import { AiOutlinePlus } from 'react-icons/ai';
 import { useMediaQuery } from 'react-responsive';
+import ReactHelmet from 'react-helmet';
 
 import { JobList } from '../../components/job-list/JobList.component';
+
+import { fetchAllJobs } from '../../services/jobs';
 
 const statuses = {
   all: 'All',
@@ -34,8 +36,8 @@ const Jobs = ({ user }) => {
           Authorization: `bearer ${user.token}`
         }
       }
-      const resp = await axios.get('http://localhost:3001/api/jobs', config);
-      setJobList(resp.data);
+      const data = await fetchAllJobs(config);
+      setJobList(data);
       setIsLoading(false);
     }
 
@@ -53,6 +55,9 @@ const Jobs = ({ user }) => {
 
   return (
     <Box padding="1em 2em" maxWidth="1000px" margin="0 auto">
+      <ReactHelmet>
+        <title>My Jobs</title>
+      </ReactHelmet>
       <Flex alignItems="center" justifyContent="space-between" marginBottom="1.5em">
         {
           !shrinkFilter
@@ -68,11 +73,11 @@ const Jobs = ({ user }) => {
                 </ButtonGroup>
               </Flex>
             : <Menu>
-                <MenuButton rightIcon="chevron-down">
+                <MenuButton as={Button} rightIcon="chevron-down">
                   Filter by: {statuses[filter]}
                 </MenuButton>
                 <MenuList minWidth="240px">
-                  <MenuOptionGroup value={filter} onChange={(value) => setFilter(value)} defaultValue="all" title="Filter" type="radio">
+                  <MenuOptionGroup value={filter} onChange={(value) => setFilter(value)} defaultValue="all" type="radio">
                     <MenuItemOption value="all">All</MenuItemOption>
                     <MenuItemOption value="applied">Applied</MenuItemOption>
                     <MenuItemOption value="under-review">Under Review</MenuItemOption>
@@ -107,4 +112,4 @@ const Jobs = ({ user }) => {
   )
 }
 
-export { Jobs };
+export default Jobs;

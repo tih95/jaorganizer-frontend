@@ -1,21 +1,22 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense, lazy } from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 
-import { Jobs } from './pages/jobs/Jobs.page';
-import { AddJob } from './pages/add-job/AddJob.page';
-import { Job } from './pages/job/Job.page';
-import { NotFound } from './pages/not-found/NotFound.page';
-import { SignUp } from './pages/sign-up/SignUp.page';
-import { Login } from './pages/login/Login.page';
 import { Header } from './components/header/Header.component';
-import { ThemeProvider, CSSReset } from '@chakra-ui/core';
-import { Landing } from './pages/landing/Landing.page';
-import { Profile } from './pages/profile/Profile.page';
+import { ThemeProvider, CSSReset, Spinner } from '@chakra-ui/core';
 
 import CustomTheme from './theme';
 
 import 'react-toastify/dist/ReactToastify.css';
+
+const Landing = lazy(() => import('./pages/landing/Landing.page'));
+const SignUp = lazy(() => import('./pages/sign-up/SignUp.page'));
+const Login = lazy(() => import('./pages/login/Login.page'));
+const Account = lazy(() => import('./pages/account/Account.page'));
+const Jobs = lazy(() => import('./pages/jobs/Jobs.page'));
+const AddJob = lazy(() => import('./pages/add-job/AddJob.page'));
+const Job = lazy(() => import('./pages/job/Job.page'));
+const NotFound = lazy(() => import('./pages/not-found/NotFound.page'));
 
 function App() {
   const [ user, setUser ] = useState(null);
@@ -44,17 +45,18 @@ function App() {
           pauseOnFocusLoss
         />
         <Header user={user} setUser={setUser} />
-        <Switch>
-          
-          <Route exact path="/" render={() => user ? <Redirect to="/jobs" /> : <Landing />} />
-          <Route exact path="/signup" render={() => user ? <Redirect to="/jobs" /> : <SignUp setUser={setUser} />} />
-          <Route exact path="/login" render={() => user ? <Redirect to="/jobs" /> : <Login setUser={setUser} />} />
-          <Route exact path="/jobs" render={props => user ? <Jobs user={user} {...props} /> : <Redirect to="/login" />} />
-          <Route exact path="/jobs/:id" render={props => user ? <Job user={user} {...props} /> : <Redirect to="/login" />} />
-          <Route exact path="/add-job" render={props => user ? <AddJob user={user} {...props} /> : <Redirect to="/login" />} />
-          <Route exact path="/profile" render={props => user ? <Profile {...props} /> : <Login />} />
-          <Route path="*" component={NotFound} />
-        </Switch>
+        <Suspense fallback={<Spinner size="xl" />}>
+          <Switch>
+            <Route exact path="/" render={() => user ? <Redirect to="/jobs" /> : <Landing />} />
+            <Route exact path="/signup" render={() => user ? <Redirect to="/jobs" /> : <SignUp setUser={setUser} />} />
+            <Route exact path="/login" render={() => user ? <Redirect to="/jobs" /> : <Login setUser={setUser} />} />
+            <Route exact path="/jobs" render={props => user ? <Jobs user={user} {...props} /> : <Redirect to="/login" />} />
+            <Route exact path="/jobs/:id" render={props => user ? <Job user={user} {...props} /> : <Redirect to="/login" />} />
+            <Route exact path="/add-job" render={props => user ? <AddJob user={user} {...props} /> : <Redirect to="/login" />} />
+            <Route exact path="/account" render={props => user ? <Account {...props} user={user} setUser={setUser} /> : <Redirect to="/login" />} />
+            <Route path="*" component={NotFound} />
+          </Switch>
+        </Suspense>
       </div>
     </ThemeProvider>
   );

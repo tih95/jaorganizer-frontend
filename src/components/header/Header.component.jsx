@@ -34,13 +34,13 @@ const Header = ({ user, setUser }) => {
                 <Button color="black" marginRight="1em" variant="link">My Jobs</Button>
               </Link>
               
-              <Menu >
-                <MenuButton as={Button}>
+              <Menu>
+                <MenuButton backgroundColor="#ffc760" _hover={{ backgroundColor: "#ffd587"}} as={Button}>
                   {user.name}
                 </MenuButton>
                 <MenuList>
-                  <MenuGroup title="Profile">
-                    <Link to="/profile"><MenuItem>My Account</MenuItem></Link>
+                  <MenuGroup title="Account">
+                    <Link to="/account"><MenuItem>My Account</MenuItem></Link>
                     <MenuItem onClick={logout}>Log Out</MenuItem>
                   </MenuGroup>
                 </MenuList>

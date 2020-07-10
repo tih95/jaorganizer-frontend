@@ -2,6 +2,7 @@ import React from 'react';
 import { Box, Image, Flex, Heading, Text, Button, ButtonGroup } from '@chakra-ui/core';
 import { Link } from 'react-router-dom';
 import { useMediaQuery } from 'react-responsive';
+import ReactHelmet from 'react-helmet';
 
 import HeroImage from '../../assets/undraw_job_offers_kw5d.png';
 
@@ -10,6 +11,9 @@ const Landing = () => {
 
   return (
     <Box padding="2em">
+      <ReactHelmet>
+        <title>JaOrganizer!</title>
+      </ReactHelmet>
       <Flex  
         flexDir={isMobile ? 'column' : 'row'}
         alignItems="center"
@@ -38,4 +42,4 @@ const Landing = () => {
   )
 }
 
-export { Landing };
+export default Landing ;

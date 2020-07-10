@@ -1,11 +1,29 @@
-import React from 'react';
-import { Box, Button, Heading } from '@chakra-ui/core';
+import React, { useState } from 'react';
 import { useFormik } from 'formik';
-import axios from 'axios';
 import * as Yup from 'yup';
-import { CustomInput } from '../../components/custom-input/CustomInput.component';
+import ReactHelmet from 'react-helmet';
+import { 
+  Box, 
+  Button, 
+  Text, 
+  Input, 
+  InputGroup, 
+  InputRightElement, 
+  InputLeftElement,
+  FormLabel,
+  FormControl } from '@chakra-ui/core';
+import { 
+  AiOutlineEye, 
+  AiOutlineEyeInvisible, 
+  AiOutlineMail,
+  AiOutlineLock } from 'react-icons/ai';
+
+import { login } from '../../services/users';
 
 const Login = ({ setUser }) => {
+  const [ showPassword, setShowPassword ] = useState(false);
+  const [ isLoggingIn, setIsLoggingIn ] = useState(false);
+
   const formik = useFormik({
     initialValues: {
       name: '',
@@ -19,12 +37,13 @@ const Login = ({ setUser }) => {
       password: Yup.string()
         .required('Password required')
     }),
-    onSubmit: async () => {
+    onSubmit: async values => {
       try {
-        const resp = await axios.post('http://localhost:3001/api/users/login', formik.values);
+        setIsLoggingIn(true);
+        const data = await login(values);
 
-        window.localStorage.setItem('loggedInUser', JSON.stringify(resp.data));
-        setUser(resp.data);
+        window.localStorage.setItem('loggedInUser', JSON.stringify(data));
+        setUser(data);
         
       } 
       catch (error) {
@@ -36,34 +55,89 @@ const Login = ({ setUser }) => {
 
   return (
     <Box maxWidth="1000px" margin="0 auto" padding="1em">
-      <Heading marginBottom="1.5em" textAlign="center">Log In</Heading>
+      <ReactHelmet>
+        <title>Login | JaOrganizer</title>
+      </ReactHelmet>
+
+      <Text 
+        fontSize="1.5em" 
+        fontWeight="500" 
+        marginBottom="1.5em" 
+        textAlign="center"
+      >
+        Log In
+      </Text>
+      
       <form onSubmit={formik.handleSubmit}>
-        <CustomInput 
-          name="email"
-          type="email"
-          id="email"
-          handleChange={formik.handleChange}
-          handleBlur={formik.handleBlur}
-          error={formik.errors.email}
-          value={formik.values.email}
-          touched={formik.touched.email}
-          label="Email"
-        />
-        <CustomInput 
-          name="password"
-          type="password"
-          id="password"
-          handleChange={formik.handleChange}
-          handleBlur={formik.handleBlur}
-          error={formik.errors.password}
-          value={formik.values.password}
-          touched={formik.touched.password}
-          label="Password"
-        />
-        <Button width="100%" type="submit">Log In</Button>
+        <FormControl marginBottom="1.5em">
+          <FormLabel htmlFor="email">Email</FormLabel>
+          <InputGroup>
+            <InputLeftElement color="gray.400">
+              <AiOutlineMail size={20} />
+            </InputLeftElement>
+            <Input 
+              type="email"
+              name="email"
+              id="email"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.email}
+              borderColor={
+                formik.touched.email && formik.errors.email ? '#FC8181' : '#CBD5E0'
+              }
+            />
+          </InputGroup>
+          {formik.touched.email && formik.errors.email
+            ? <Text color="#FC8181">{formik.errors.email}</Text>
+            : null
+          }
+        </FormControl>
+        
+        <FormControl marginBottom="1.5em">
+          <FormLabel htmlFor="password">Password</FormLabel>
+          <InputGroup>
+            <InputLeftElement color="gray.400">
+              <AiOutlineLock size={20} />
+            </InputLeftElement>
+            <Input 
+              name="password"
+              type={showPassword ? 'text' : 'password'}
+              id="password"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.password}
+              borderColor={
+                formik.touched.password && formik.errors.password 
+                  ? '#FC8181' 
+                  : '#CBD5E0'
+              }
+            />
+            <InputRightElement 
+              cursor="pointer" 
+              color="gray.400"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword 
+                ? <AiOutlineEyeInvisible size={20} /> 
+                : <AiOutlineEye size={20} />}
+            </InputRightElement>
+          </InputGroup>
+          {formik.touched.password && formik.errors.password
+            ? <Text color="#FC8181">{formik.errors.password}</Text>
+            : null
+          }
+        </FormControl>
+        <Button 
+          isLoading={isLoggingIn} 
+          loadingText="Logging In..." 
+          width="100%" 
+          type="submit"
+        >
+          Log In
+        </Button>
       </form>
     </Box>
   )
 }
 
-export { Login };
+export default Login;
