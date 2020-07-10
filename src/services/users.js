@@ -1,5 +1,5 @@
 import axios from 'axios';
-const baseUrl = 'http://localhost:3001/api/users';
+const baseUrl = 'https://infinite-garden-10545.herokuapp.com/api/users';
 
 export const addUser = async (body) => {
   const resp = await axios.post(`${baseUrl}/signup`, body);

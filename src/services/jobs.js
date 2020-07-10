@@ -1,5 +1,5 @@
 import axios from 'axios';
-const baseUrl = 'http://localhost:3001/api/jobs';
+const baseUrl = 'https://infinite-garden-10545.herokuapp.com/api/jobs';
 
 export const fetchAllJobs = async (config) => {
   const resp = await axios.get(`${baseUrl}`, config);

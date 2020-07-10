@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import ReactHelmet from 'react-helmet';
+import { toast } from 'react-toastify';
 import { 
   Box, 
   Button, 
@@ -48,6 +49,8 @@ const Login = ({ setUser }) => {
       } 
       catch (error) {
         formik.setFieldError('password', 'Invalid password or email');
+        toast.error('Trouble logging in');
+        setIsLoggingIn(false);
         console.log('error', error);
       } 
     }
