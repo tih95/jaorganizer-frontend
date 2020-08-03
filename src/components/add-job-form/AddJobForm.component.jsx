@@ -2,7 +2,16 @@ import React, { useState } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { toast } from 'react-toastify';
-import { Button, Text, Input, InputGroup, Stack, Textarea, FormLabel, FormControl, Select } from '@chakra-ui/core';
+import { 
+	Button, 
+	Text, 
+	Input, 
+	InputGroup, 
+	Stack, 
+	Textarea, 
+	FormLabel, 
+	FormControl, 
+	Select } from '@chakra-ui/core';
 
 import { addJob } from '../../services/jobs';
 

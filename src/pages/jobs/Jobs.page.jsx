@@ -5,7 +5,7 @@ import { Button, Box, FormLabel, Flex, RadioButtonGroup, Skeleton,
   MenuButton,
   MenuList,
   MenuOptionGroup,
-  MenuItemOption, } from '@chakra-ui/core';
+  MenuItemOption} from '@chakra-ui/core';
 import { AiOutlinePlus } from 'react-icons/ai';
 import { useMediaQuery } from 'react-responsive';
 import ReactHelmet from 'react-helmet';
@@ -81,12 +81,12 @@ const Jobs = ({ user }) => {
                   <CustomRadio variantColor="red" value="rejected">Rejected</CustomRadio>
                 </RadioButtonGroup>
               </Flex>
-            : <Menu>
-                <MenuButton variantColor={colors[filter]} as={Button} rightIcon="chevron-down">
-                  Filter by: {statuses[filter]}
+            : <Menu flex="1">
+                <MenuButton variantColor={colors[filter]} size="sm" as={Button} rightIcon="chevron-down">
+                  {statuses[filter]}
                 </MenuButton>
                 <MenuList minWidth="240px">
-                  <MenuOptionGroup value={filter} onChange={(value) => setFilter(value)} defaultValue="all" type="radio">
+                  <MenuOptionGroup title="Filter By" value={filter} onChange={(value) => setFilter(value)} defaultValue="all" type="radio">
                     <MenuItemOption value="all">All</MenuItemOption>
                     <MenuItemOption value="applied">Applied</MenuItemOption>
                     <MenuItemOption value="under-review">Under Review</MenuItemOption>
@@ -102,9 +102,10 @@ const Jobs = ({ user }) => {
         
         <Link to="/add-job">
           <Button 
+            flex="1"
+            size="sm"
             leftIcon={AiOutlinePlus} 
-            backgroundColor="teal.400" 
-            _hover={{backgroundColor: 'teal.300'}}
+            variantColor="teal"
           >
             Add new Job
           </Button>
