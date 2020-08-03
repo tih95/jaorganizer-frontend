@@ -154,6 +154,7 @@ const SignUp = ({ setUser }) => {
           }
         </FormControl>
         <Button 
+          variantColor="teal"
           isLoading={isSigningUp} 
           loadingText="Submitting" 
           width="100%" 

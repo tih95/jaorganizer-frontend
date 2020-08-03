@@ -135,6 +135,7 @@ const Login = ({ setUser }) => {
           loadingText="Logging In..." 
           width="100%" 
           type="submit"
+          variantColor="teal"
         >
           Log In
         </Button>

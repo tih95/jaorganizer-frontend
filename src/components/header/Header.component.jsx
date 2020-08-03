@@ -1,13 +1,12 @@
 import React from 'react';
-import { Box, Image, ButtonGroup, Button, Menu,
+import { Box, Text, ButtonGroup, Button, Menu,
   MenuButton,
   MenuList,
   MenuItem,
   MenuGroup} from '@chakra-ui/core';
+import { RiArrowDropDownLine } from 'react-icons/ri';
 import { Link } from 'react-router-dom';
 import { useMediaQuery } from 'react-responsive';
-
-import LogoImage from '../../assets/JaOrganizer-logo-black.png';
 
 const Header = ({ user, setUser }) => {
   const isMobile = useMediaQuery({ query: '(max-width: 900px)' });
@@ -26,7 +25,7 @@ const Header = ({ user, setUser }) => {
       padding={isMobile ? '1em' : '1.5em 2em'}
       boxShadow="0px 0px 9px 3px rgba(41,41,41,.25)"
     >
-      <Link to="/"><Image width="150px" src={LogoImage} alt="logo" /></Link>
+      <Link to="/"><Text fontWeight="bold" fontSize="1.2em">jaorganizer</Text></Link>
       {
         user 
           ? <Box>
@@ -35,7 +34,7 @@ const Header = ({ user, setUser }) => {
               </Link>
               
               <Menu>
-                <MenuButton backgroundColor="#ffc760" _hover={{ backgroundColor: "#ffd587"}} as={Button}>
+                <MenuButton color="black" rightIcon={RiArrowDropDownLine} variant="link" as={Button}>
                   {user.name}
                 </MenuButton>
                 <MenuList>

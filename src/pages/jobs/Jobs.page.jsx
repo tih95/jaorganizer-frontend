@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Button, Box, FormLabel, Flex, ButtonGroup, Skeleton,
+import { Button, Box, FormLabel, Flex, RadioButtonGroup, Skeleton,
   Menu,
   MenuButton,
   MenuList,
@@ -13,6 +13,7 @@ import ReactHelmet from 'react-helmet';
 import { JobList } from '../../components/job-list/JobList.component';
 
 import { fetchAllJobs } from '../../services/jobs';
+import CustomRadio from '../../components/custom-radio/CustomRadio.component';
 
 const statuses = {
   all: 'All',
@@ -23,8 +24,16 @@ const statuses = {
   rejected: 'Rejected'
 }
 
+const colors = {
+  'applied': 'blue',
+  'under-review': 'yellow',
+  'offered': 'green',
+  'rejected': 'red',
+  'interviewing': 'orange'
+}
+
 const Jobs = ({ user }) => {
-  const shrinkFilter = useMediaQuery({ query: '(max-width: 940px)'});
+  const shrinkFilter = useMediaQuery({ query: '(max-width: 800px)'});
   const [ jobList, setJobList ] = useState([]);
   const [ isLoading, setIsLoading ] = useState(true);
   const [ filter, setFilter ] = useState('all');
@@ -54,7 +63,7 @@ const Jobs = ({ user }) => {
   const filteredJobs = filterJobs(filter);
 
   return (
-    <Box padding="1em 2em" maxWidth="1000px" margin="0 auto">
+    <Box padding="1em 2em" maxWidth="900px" margin="0 auto">
       <ReactHelmet>
         <title>My Jobs</title>
       </ReactHelmet>
@@ -63,17 +72,17 @@ const Jobs = ({ user }) => {
           !shrinkFilter
             ? <Flex alignItems="center">
                 <FormLabel>Filter by: </FormLabel>
-                <ButtonGroup>
-                  <Button variant="ghost" onClick={() => setFilter('all')}>All</Button>
-                  <Button variantColor="blue" variant="ghost" onClick={() => setFilter('applied')}>Applied</Button>
-                  <Button variantColor="yellow" variant="ghost" onClick={() => setFilter('under-review')}>Under Review</Button>
-                  <Button variantColor="orange" variant="ghost" onClick={() => setFilter('interviewing')}>Interviewing</Button>
-                  <Button variantColor="green" variant="ghost" onClick={() => setFilter('offered')}>Offered</Button>
-                  <Button variantColor="red" variant="ghost" onClick={() => setFilter('rejected')}>Rejected</Button>
-                </ButtonGroup>
+                <RadioButtonGroup onChange={val => setFilter(val)} isInline defaultValue="all">
+                  <CustomRadio value="all">All</CustomRadio>
+                  <CustomRadio variantColor="blue" value="applied">Applied</CustomRadio>
+                  <CustomRadio variantColor="yellow" value="under-review">Under Review</CustomRadio>
+                  <CustomRadio variantColor="orange" value="interviewing">Interviewing</CustomRadio>
+                  <CustomRadio variantColor="green" value="offered">Offered</CustomRadio>
+                  <CustomRadio variantColor="red" value="rejected">Rejected</CustomRadio>
+                </RadioButtonGroup>
               </Flex>
             : <Menu>
-                <MenuButton as={Button} rightIcon="chevron-down">
+                <MenuButton variantColor={colors[filter]} as={Button} rightIcon="chevron-down">
                   Filter by: {statuses[filter]}
                 </MenuButton>
                 <MenuList minWidth="240px">
